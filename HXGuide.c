@@ -346,15 +346,149 @@ void addInfo(void){
 }
 //删除景点
 void delInfo(void){
+	if(HBUmap.n <= 0)
+    {
+        printf("已经删没了，不能再删除！\n");
+        return;
+    }
+    showInfo();
+    printf("您要删除哪个景点？\n");
+    int a;
+    scanf("%d",&a);
+    while(a<1 || a>HBUmap.n)
+    {
+        printf("%d,个你都输错了，重新输入！\n",HBUmap.n);
+        scanf("%d",&a);
+    }
+    printf("删除的景点为：%s真的要删吗？ 输入1 for sure： \n",HBUmap.vexs[a-1].name);
+    int flag;
+    scanf("%d",&flag);
+    if(flag == 1)
+    {
+        printf("删除景点ING\n");
+        int i,j;
+        int count = 0;
+        for(i = 0;i<HBUmap.n;i++)
+            if(HBUmap.edges[a-1][i] != INFINITY)
+                count++;
+        for(i = a-1;i<HBUmap.n;i++)
+            HBUmap.vexs[i] = HBUmap.vexs[i+1];
+        for(i = 0;i<HBUmap.n;i++)
+            
+			for(j = a-1;j<HBUmap.n;j++)
+                HBUmap.edges[i][j] = HBUmap.edges[i][j+1];
+        for(i = 0;i<HBUmap.n;i++)
+            for(j = a-1;j<HBUmap.n;j++)
+                HBUmap.edges[j][i] = HBUmap.edges[j+1][i];
+        HBUmap.n--;
+        HBUmap.e -= count;
+    }
+    else
+        return;
+        long long i; 
+    for(i = 0;i<DELAY ;i++);
+    printf("已经删完了\n，1s后回到主界面");
+    Sleep(1000); 
 	return;
 }
 //添加道路
 void addPath(void){
+	if(HBUmap.n <= 0)
+    {
+        printf("世界上本没有路，走的人多了就有了路，现在还没有路呢~\n");
+        return;
+    }
+    showInfo();
+    if(HBUmap.e == 0)
+        printf("错误：目前暂无道路\n");
+    else
+        printf("目前总共有%d条道路\n",HBUmap.e);
+    printf("请输入道路起点和终点：\n");
+    int a,b;
+    scanf("%d %d",&a,&b);
+    while(a<1 || a>HBUmap.n || b<1 || b>HBUmap.n || a == b)
+    {
+        if(a == b)
+            printf("输错了吧，这俩咋一样呢？！\n");
+        else
+            printf("编号输入有误，最大是%d，重新输\n",HBUmap.n);
+        scanf("%d %d",&a,&b);
+    }
+    if(HBUmap.edges[a-1][b-1] != INFINITY){
+        printf("%s与%s之间这条路已经有了，不要再添加！\n",HBUmap.vexs[a-1].name,HBUmap.vexs[b-1].name);
+        return;
+    }
+    else
+    {
+        int distance;
+        printf("请输入%s与%s之间道路的长度：\n",HBUmap.vexs[a-1].name,HBUmap.vexs[b-1].name);
+        scanf("%d",&distance);
+        while(distance <=0 || distance >= INFINITY)
+        {
+            printf("这个长度有问题\n");
+            scanf("%d",&distance);
+        }
+        printf("正在添加道路...\n");
+        HBUmap.edges[a-1][b-1] = HBUmap.edges[b-1][a-1] = distance;
+        HBUmap.e++;
+        long long i;
+        for(i = 0;i<DELAY ;i++);
+        printf("道路添加成功！\n");
+        printf("1s后回到主界面");
+    Sleep(1000); 
+    }
 	return;
 }
 //删除道路
 void delPath(void){
-	return;
+	if(HBUmap.n <= 0)
+    {
+        printf("无任何景点，请先添加\n");
+        return;
+    }
+    if(HBUmap.e <= 0)
+    {
+        printf("地图中无任何道路，请先添加！\n");
+        return;
+    }
+    showInfo();
+    printf("目前总共有%d条道路\n",HBUmap.e);
+    printf("请输入要删除道路的两个景点编号，中间用空格隔开：\n");
+    int a,b;
+    scanf("%d %d",&a,&b);
+    while(a<1 || a>HBUmap.n || b<1 || b>HBUmap.n || a == b)
+    {
+        if(a == b)
+            printf("请勿输入两个相同编号，重新输入！\n");
+        else
+            printf("编号输入有误，两个编号都应位于1～%d之间，重新输入！\n",HBUmap.n);
+        scanf("%d %d",&a,&b);
+    }
+    if(HBUmap.edges[a-1][b-1] == INFINITY)
+    {
+        printf("%s与%s之间无道路！\n",HBUmap.vexs[a-1].name,HBUmap.vexs[b-1].name);
+        return;
+    }
+    else
+    {
+        printf("您要删除的是%s与%s的道路,确认输入1 \n",HBUmap.vexs[a-1].name,HBUmap.vexs[b-1].name);
+        int flag;
+        scanf("%d",&flag);
+        if(flag == 1)
+        {
+            printf("正在删除道路...\n");
+            HBUmap.edges[a-1][b-1] = HBUmap.edges[b-1][a-1] = INFINITY;
+            HBUmap.e--;
+            long long i;
+            for(i = 0;i<DELAY ;i++);
+            printf("道路删除成功！\n");
+        }
+        else
+            return;
+        	printf("1s后回到主界面");
+    		Sleep(1000); 
+    }
+    return ; 
 }
 //生成图
 void create(void){

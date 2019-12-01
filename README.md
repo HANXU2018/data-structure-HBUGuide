@@ -44,7 +44,7 @@ void Dijkstra(void){
 void Floyd(void){
 	return;
 }
-- [ ]  //修改景点信息
+- [x]  //修改景点信息
 void modifyInfo(void){
 	return;
 }
@@ -52,15 +52,15 @@ void modifyInfo(void){
 void addInfo(void){
 	return;
 }
-- [ ]  //删除景点
+- [x]  //删除景点
 void delInfo(void){
 	return;
 }
-- [ ]  //添加道路
+- [x]  //添加道路
 void addPath(void){
 	return;
 }
-- [ ]  //删除道路
+- [x]  //删除道路
 void delPath(void){
 	return;
 }
