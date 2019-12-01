@@ -104,8 +104,14 @@ int main(){
 } 
 //输出所有景点
 void showInfo(void){
+	system("cls");
+	printf("HBU景点列表:\n");
+	int i;
+	for(i = 0;i<HBUmap.n;i++)
+        printf("%d : %s\n",i+1,HBUmap.vexs[i].name);
 	return;
-}
+} 
+
 //游客系统
 void Visiter(void){
 	system("cls");
@@ -214,6 +220,25 @@ void Administrator(void){
 }
 //景点介绍
 void introduct(void){
+	if(HBUmap.n <= 0)
+    {
+        printf("这是个假学校，没有任何景点~\n");
+        return;
+    }
+    showInfo();
+    printf("你要看那个说号:");
+    int a;
+    scanf("%d",&a);
+    system("cls");
+    while(a<1 || a>HBUmap.n)
+    {
+        printf("这都输错了1到%d之间，重新输！\n",HBUmap.n);
+        scanf("%d",&a);
+    }
+    printf("%s:%s\n",HBUmap.vexs[a-1].name,HBUmap.vexs[a-1].features);
+    Sleep(1000);
+	printf("即将1S后返回主界面\n"); 
+	Sleep(1000);
 	return;
 }
 //查找游客所在景点与其他景点的距离
@@ -226,10 +251,97 @@ void Floyd(void){
 }
 //修改景点信息
 void modifyInfo(void){
+	if(HBUmap.n <= 0)
+    {
+        printf("这是一个虚假的学校，竟然没有任何景点\n");
+        return;
+    }
+    showInfo();
+    int a;
+    printf("你说哪里要改？说编号：\n");
+    scanf("%d",&a);
+    while(a<1 || a>HBUmap.n)
+    {
+        printf("编号输错了，从1开始到%d，你再试试别的\n",HBUmap.n);
+        scanf("%d",&a);
+    }
+    char newName[100];
+    char newFeatures[1000];
+    printf("这里原来叫%s,你要把他换成啥？：\n",HBUmap.vexs[a-1].name);
+    scanf("%s",newName);getchar();
+    printf("简介现在是：\n%s\n你说改成啥？：\n",HBUmap.vexs[a-1].features);
+    scanf("%s",newFeatures);getchar();
+    printf("正在修改...\n");
+    strcpy(HBUmap.vexs[a-1].name, newName);
+    strcpy(HBUmap.vexs[a-1].features, newFeatures);
+    long long int i=0;
+	for(i = 0;i<DELAY ;i++);
+    printf("行了改好了\n");
+    printf("要还改就输入1，输别的就退出了\n");
+    int flag;
+    scanf("%d",&flag);
+    if(flag == True)
+        modifyInfo();
 	return;
 }
 //添加景点
 void addInfo(void){
+	
+	if(HBUmap.n >= MaxVerNum)
+    {
+        printf("河大已经满了不能再加了\n");
+        return;
+    }
+    showInfo();
+    char newName[100];char newFeatures[500];
+    printf("新加的这个景儿叫啥？：\n");
+    scanf("%s",newName);getchar();
+    printf("%s有啥特点？\n",newName);
+    scanf("%s",newFeatures);getchar();
+    showInfo();
+    int m;
+    printf("它旁边有几个景点？\n");
+    scanf("%d",&m);
+    int i ;
+	for(i= 0;i<m;i++)
+    {
+        int a,distance;
+        printf("输一下%s的第%d个相连的景点的编号:\n",newName,i+1);
+        scanf("%d",&a);
+        while(a<1 || a>HBUmap.n || HBUmap.edges[a-1][HBUmap.n] != INFINITY)
+        {
+            if(a<1 || a>HBUmap.n)
+            {
+                printf("输错了，编号在1到%d之间，重新输！\n",HBUmap.n);
+                scanf("%d",&a);
+            }
+            if(HBUmap.edges[a-1][HBUmap.n] != INFINITY)
+            {
+                printf("老哥，这个已经有了，重新输\n");
+                scanf("%d",&a);
+            }
+        }
+        printf("%s与%s之间的距离是多少？:\n",newName,HBUmap.vexs[a-1].name);
+        scanf("%d",&distance);
+        while(distance <=0 || distance>INFINITY)
+        {
+            printf("距离输入非法了重新输入！\n");
+            scanf("%d",&distance);
+        }
+        HBUmap.edges[a-1][HBUmap.n] = HBUmap.edges[HBUmap.n][a-1] = distance;
+    }
+    printf("正在添加景点...\n");
+    strcpy(HBUmap.vexs[HBUmap.n++].name,newName);
+    strcpy(HBUmap.vexs[HBUmap.n-1].features,newFeatures);
+    HBUmap.e += m;
+    
+	for(i= 0;i<DELAY ;i++);
+    printf("这个景点添加成功了！\n");
+    printf("还要加就输入1，输入其他字符就退出\n");
+    int flag;
+    scanf("%d",&flag);
+    if(flag == 1)
+        addInfo();
 	return;
 }
 //删除景点
@@ -246,6 +358,63 @@ void delPath(void){
 }
 //生成图
 void create(void){
+	HBUmap.n = 12;//12个景点 
+    HBUmap.e = 20;//20条路 
+    int i ;
+	for(i = 0;i<MaxVerNum;i++)
+    {
+        HBUmap.vexs[i].num = i+1;
+    }
+    for(i = 0;i<MaxVerNum;i++){
+    	int j=0;
+		for(j = 0;j<MaxVerNum;j++)
+            HBUmap.edges[i][j] = INFINITY;	
+	}
+    strcpy(HBUmap.vexs[0].name, "操场");
+    strcpy(HBUmap.vexs[0].features, "跑一千米的好地方");
+    strcpy(HBUmap.vexs[1].name, "图书馆");
+    strcpy(HBUmap.vexs[1].features, "进入需要使用学生卡，微信公众号预约");
+    strcpy(HBUmap.vexs[2].name, "体检中心");
+    strcpy(HBUmap.vexs[2].features, "谁能告诉我这个是干啥的？");
+    strcpy(HBUmap.vexs[3].name, "校门北口");
+    strcpy(HBUmap.vexs[3].features, "这个口不外卖进不来，开学的时候哈罗也不让进。");
+    strcpy(HBUmap.vexs[4].name, "银杏景观");
+    strcpy(HBUmap.vexs[4].features, "大妈的乐园，情侣的天堂");
+    strcpy(HBUmap.vexs[5].name, "邯郸音乐厅");
+    strcpy(HBUmap.vexs[5].features, "一个团委举办大会的地方");
+    strcpy(HBUmap.vexs[6].name, "餐厅");
+    strcpy(HBUmap.vexs[6].features, "三层餐厅，想吃的差不多都有");
+    strcpy(HBUmap.vexs[7].name, "花园景观");
+    strcpy(HBUmap.vexs[7].features, "没有看到花，没有看到景");
+    strcpy(HBUmap.vexs[8].name, "校门东口");
+    strcpy(HBUmap.vexs[8].features, "从中间这个口出去，全是发小广告的。");
+    strcpy(HBUmap.vexs[9].name, "信息学部");
+    strcpy(HBUmap.vexs[9].features, "这个地儿很神秘，从没去过。");
+    strcpy(HBUmap.vexs[10].name, "网计学院");
+    strcpy(HBUmap.vexs[10].features, "C1，网络空间安全与计算机学院");
+    strcpy(HBUmap.vexs[11].name, "校门南口");
+    strcpy(HBUmap.vexs[11].features, "学校正宗的大门口");
+    //添加边权 
+    HBUmap.edges[0][2] = HBUmap.edges[2][0] = 350;
+    HBUmap.edges[0][5] = HBUmap.edges[5][0] = 480;
+    HBUmap.edges[0][1] = HBUmap.edges[1][0] = 280;
+    HBUmap.edges[0][3] = HBUmap.edges[3][0] = 200;
+    HBUmap.edges[3][4] = HBUmap.edges[4][3] = 100;
+    HBUmap.edges[3][6] = HBUmap.edges[6][3] = 100;
+    HBUmap.edges[4][6] = HBUmap.edges[6][4] = 100;
+    HBUmap.edges[2][5] = HBUmap.edges[5][2] = 200;
+    HBUmap.edges[1][5] = HBUmap.edges[5][1] = 400;
+    HBUmap.edges[1][7] = HBUmap.edges[7][1] = 160;
+    HBUmap.edges[1][8] = HBUmap.edges[8][1] = 300;
+    HBUmap.edges[6][8] = HBUmap.edges[8][6] = 100;
+    HBUmap.edges[5][9] = HBUmap.edges[9][5] = 500;
+    HBUmap.edges[11][10] = HBUmap.edges[10][11] = 400;
+    HBUmap.edges[11][9] = HBUmap.edges[9][11] = 400;
+    HBUmap.edges[11][7] = HBUmap.edges[7][11] = 500;
+    HBUmap.edges[11][8] = HBUmap.edges[8][11] = 600;
+    HBUmap.edges[10][5] = HBUmap.edges[5][10] = 500;
+    HBUmap.edges[9][7] = HBUmap.edges[7][9] = 150;
+    HBUmap.edges[8][7] = HBUmap.edges[7][8] = 200;
 	return;
 }
 

@@ -27,3 +27,44 @@
 - [x]    2.构造存储数据结构体 2019年11月30日21:36:17
 - [x]    3.编写用户管理员登录界面，以及函数调用。 2019年11月30日21:36:19
 - [ ]    4.完善各个函数功能。 
+
+
+
+### 函数列表
+
+- [x]  //景点介绍
+void introduct (void){
+	return;
+}
+- [ ]  //查找游客所在景点与其他景点的距离
+void Dijkstra(void){
+	return;
+}
+- [ ]  //查找游客指定的两个景点间的最短路径长度
+void Floyd(void){
+	return;
+}
+- [ ]  //修改景点信息
+void modifyInfo(void){
+	return;
+}
+- [x]  //添加景点
+void addInfo(void){
+	return;
+}
+- [ ]  //删除景点
+void delInfo(void){
+	return;
+}
+- [ ]  //添加道路
+void addPath(void){
+	return;
+}
+- [ ]  //删除道路
+void delPath(void){
+	return;
+}
+- [x]  //生成图
+void create(void){
+	return;
+}
