@@ -91,7 +91,11 @@ int main(){
 				 	printf("密码正确，即将进入系统\n"); 
 				 	Administrator();//转入超级管理员界面 
 				 }else{
-				 	printf("密码错误即将退回主界面\n");
+				 	system("cls");
+				 	printf("----------密码错误---------\n");
+				 	printf("系统将在1S后回到主面板");
+     				Sleep(1000); 
+    				system("cls");
 				 } 
 				 break;
 			default:
@@ -243,10 +247,137 @@ void introduct(void){
 }
 //查找游客所在景点与其他景点的距离
 void Dijkstra(void){
+	 if(HBUmap.n <= 0)
+    {
+        printf("地图中无任何景点，请先添加景点！\n");
+        return;
+    }
+    showInfo();
+    printf("请输入您所在的景点编号:");
+    int a;
+    scanf("%d",&a);
+    while(a<1 || a>HBUmap.n)
+    {
+        printf("编号输入有误，编号应位于1～%d之间，重新输入！\n",HBUmap.n);
+        scanf("%d",&a);
+    }
+    int final[MaxVerNum];
+    int P[MaxVerNum];
+    int D[MaxVerNum];
+    int i,j = 0,k,min,pre;
+    final[a-1] = 1;
+	for(i = 0;i<HBUmap.n;i++)
+    {
+        D[i] = HBUmap.edges[a-1][i];
+        P[i] = a-1;
+    }
+    D[a-1] = 0;final[a-1] = 1;P[a-1] = -1;
+    for(i = 1;i<HBUmap.n;i++)
+    {
+        min = INFINITY+1;
+        for(k = 0;k<HBUmap.n;k++)
+            if(final[k] == 0 && D[k]<min)
+            {
+                j = k;
+                min = D[k];
+            }
+        final[j] = 1;
+        for(k = 0;k<HBUmap.n;k++)
+            if(final[k] == 0 && (D[j]+HBUmap.edges[j][k] < D[k]))
+            {
+                D[k] = D[j]+HBUmap.edges[j][k];
+                P[k] = j;
+            }
+    }
+    for(i = 0;i<HBUmap.n;i++)
+    {
+        if(i!=a-1)
+        {
+            if(D[i] != INFINITY)
+            {
+                printf("%d米 : %s",D[i],HBUmap.vexs[i].name);
+                pre = P[i];
+                while (pre >= 0)
+                {
+                    printf("<-%s",HBUmap.vexs[pre].name);
+                    pre = P[pre];
+                }
+                printf("\n");
+                Sleep(1000); 
+            }
+        }
+    }
+    printf("系统将在1S内回到主面板\n"); 
+    Sleep(1000); 
+    system("cls");
 	return;
 }
 //查找游客指定的两个景点间的最短路径长度
 void Floyd(void){
+	if(HBUmap.n <= 0)
+    {
+        printf("地图中无任何景点，请先添加景点！\n");
+        return;
+    }
+    showInfo();
+    int path[MaxVerNum][MaxVerNum];
+    int dist[MaxVerNum][MaxVerNum];
+    int i,j,k;
+    int temp;
+    for(i = 0;i<HBUmap.n;i++)
+        for(j=0;j<HBUmap.n;j++)
+        {
+            dist[i][j] = HBUmap.edges[i][j];
+            path[i][j] = j;
+        }
+    for(k=0;k<HBUmap.n;k++)
+        for(i=0;i<HBUmap.n;i++)
+            for(j=0;j<HBUmap.n;j++)
+            {
+                temp = (dist[i][k] == INFINITY || dist[k][j] == INFINITY) ? INFINITY : (dist[i][k] + dist[k][j]);
+                if(dist[i][j] > temp)
+                {
+                    dist[i][j] = temp;
+                    path[i][j] = k;
+                }
+            }
+    int a,b;
+    printf("请输入您要查询之间距离的两个景点编号，中间用空格隔开：\n");
+    scanf("%d %d",&b,&a);
+    while(a<1 || a>HBUmap.n|| b<1 || b>HBUmap.n || a == b)
+    {
+         if(a == b)
+            printf("请勿输入两个相同编号，重新输入！\n");
+         else
+            printf("编号输入有误，两个编号都应位于1～%d之间，重新输入！\n",HBUmap.n);
+         scanf("%d %d",&b,&a);
+    }
+    if(dist[a-1][b-1] == INFINITY)
+    {
+        printf("%s与%s之间无路径！\n",HBUmap.vexs[b-1].name,HBUmap.vexs[a-1].name);
+        return;
+    }
+    else
+    {
+    	printf("%s到%s的最短路径长度为：%d米\n",HBUmap.vexs[b-1].name,HBUmap.vexs[a-1].name,dist[a-1][b-1]);
+        printf("路径为：%s",HBUmap.vexs[b-1].name);
+        if(path[a][b] == b) printf("->%s\n",HBUmap.vexs[a-1].name);
+        else
+        {
+            k = b-1;
+            while(path[a-1][k] != k)
+            {
+                k = path[a-1][k];
+                printf("->%s",HBUmap.vexs[k].name);
+            }
+            printf("->%s",HBUmap.vexs[a-1].name);
+        }
+        printf("\n");
+        Sleep(1000); 
+    }
+    printf("系统将在1S后回到主面板");
+     Sleep(1000); 
+    system("cls");
 	return;
 }
 //修改景点信息

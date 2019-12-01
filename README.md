@@ -36,11 +36,11 @@
 void introduct (void){
 	return;
 }
-- [ ]  //查找游客所在景点与其他景点的距离
+- [x]  //查找游客所在景点与其他景点的距离
 void Dijkstra(void){
 	return;
 }
-- [ ]  //查找游客指定的两个景点间的最短路径长度
+- [x]  //查找游客指定的两个景点间的最短路径长度
 void Floyd(void){
 	return;
 }
